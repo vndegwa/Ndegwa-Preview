@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ndegwa Actuarial Diary</title>
+<meta name="description" content="Ndegwa, student actuary. Notes on insurance product design, pricing, regulation and the gaps between Kenya, East Africa and South Africa.">
+
+<!--
+  HOW TO ADD CONTENT
+  Publications: inside <ol id="src-pubs">, copy one <li class="pub"> block.
+  Set data-category to ONE of:
+     life-individual, life-retirement-post, life-retirement-pre, life-group,
+     general, banking, esg, policy, markets, academia
+  The home screen apps pick entries up automatically by category.
+  Products and Projects: copy a <div class="product-card"> inside #src-products or #src-projects.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper: #F4EFE6;
+    --paper-tint: #ECE5D8;
+    --ink: #1A1614;
+    --ink-soft: #4A4239;
+    --ink-mute: #8C8074;
+    --rule: #C9BFAB;
+    --serif: 'EB Garamond', Garamond, Georgia, serif;
+    --ui: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --icon: 76px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--ui);
+    color: #fff;
+    background: #241f3d;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; }
+
+  /* ───── WALLPAPER ───── */
+  .wallpaper { position: fixed; inset: 0; overflow: hidden; z-index: 0;
+    background: linear-gradient(180deg, #1c1936 0%, #3b2a52 26%, #8a4a5e 50%, #d9804f 70%, #f3c27c 84%, #f6d9a0 100%); }
+  .wallpaper .layer { position: absolute; left: -4%; width: 108%; transition: transform .6s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+  .sun { position: absolute; left: 62%; top: 58%; width: 26vmin; height: 26vmin; border-radius: 50%;
+    background: radial-gradient(circle, #fff3cf 0%, #ffd78a 38%, rgba(255,190,110,.0) 70%);
+    transform: translate(-50%, -50%); animation: breathe 9s ease-in-out infinite; }
+  @keyframes breathe { 50% { transform: translate(-50%, -52%) scale(1.06); } }
+  .stars { position: absolute; inset: 0 0 55% 0; }
+  .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: .7; animation: twinkle 4s ease-in-out infinite; }
+  @keyframes twinkle { 50% { opacity: .15; } }
+  .hills { bottom: 0; height: 52%; }
+  .hills svg { width: 100%; height: 100%; display: block; }
+  .bird { position: absolute; top: 34%; left: -5%; width: 22px; opacity: .55; animation: fly 38s linear infinite; }
+  .bird.b2 { top: 30%; width: 16px; animation-delay: -14s; animation-duration: 44s; }
+  @keyframes fly { to { transform: translate(112vw, -6vh); } }
+
+  /* ───── STATUS BAR ───── */
+  .status { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center;
+    padding: max(12px, env(safe-area-inset-top)) 24px 8px; font-size: 13px; font-weight: 600; letter-spacing: .01em; text-shadow: 0 1px 3px rgba(0,0,0,.35); }
+  .status .brand { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+  .status .brand span { color: #f3c27c; }
+  .status .right { display: flex; gap: 16px; align-items: center; }
+  .status .right a { text-decoration: none; opacity: .85; font-weight: 500; }
+  .status .right a:hover { opacity: 1; text-decoration: underline; }
+
+  /* ───── HOME ───── */
+  .home { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; padding: 64px 32px 132px; }
+  .home-grid { flex: 1; display: grid; grid-template-columns: minmax(280px, 360px) 1fr; gap: 40px; align-items: start; max-width: 1180px; width: 100%; margin: 0 auto; padding-top: 24px; }
+  .widgets { display: grid; gap: 18px; }
+  .widget { border-radius: 26px; padding: 18px 20px; background: rgba(255,255,255,.16); backdrop-filter: blur(22px) saturate(1.4); -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,.22); box-shadow: 0 10px 30px rgba(20,10,30,.18); }
+  .widget h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .14em; font-weight: 700; opacity: .8; margin-bottom: 10px; }
+  .clocks { display: flex; gap: 22px; }
+  .clock { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; }
+  .clock svg { width: 88px; height: 88px; }
+  .clock small { display: block; opacity: .75; font-weight: 500; }
+  .hello { font-family: var(--serif); }
+  .hello p.big { font-size: 26px; line-height: 1.15; font-weight: 500; margin-bottom: 10px; }
+  .hello .hl { background: linear-gradient(90deg, #ffd27a, #ff9a6b); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hello p.big { font-size: 30px; }
+  .lately { font-family: var(--ui); font-size: 14px; margin-bottom: 10px; min-height: 2.6em; }
+  .rotator { display: inline-block; font-weight: 600; color: #ffe2a8; transition: opacity .35s, transform .35s; }
+  .rotator.out { opacity: 0; transform: translateY(-8px); }
+  .roles { font-family: var(--ui); font-size: 11.5px; opacity: .8; line-height: 1.5; margin-bottom: 14px; }
+  .cta { display: flex; gap: 8px; flex-wrap: wrap; font-family: var(--ui); }
+  .cta button { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 999px; background: #fff; color: #1a1614; transition: transform .2s; }
+  .cta button.ghost { background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.4); }
+  .cta button:hover { transform: translateY(-2px); }
+  .hello ul { list-style: none; font-family: var(--ui); font-size: 13px; line-height: 1.5; }
+  .hello li { display: flex; gap: 8px; }
+  .hello li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #f3c27c; margin-top: 7px; flex: none; }
+  .stats { display: flex; justify-content: space-between; }
+  .stats button { text-align: left; }
+  .stats b { display: block; font-family: var(--serif); font-size: 30px; font-weight: 600; line-height: 1; }
+  .stats span { font-size: 11px; opacity: .8; }
+
+  .icons { display: grid; grid-template-columns: repeat(4, var(--icon)); justify-content: space-evenly; row-gap: 34px; padding-top: 8px; }
+  .app-icon { display: flex; flex-direction: column; align-items: center; gap: 8px; width: var(--icon); opacity: 0; transform: scale(.6) translateY(20px);
+    animation: pop .7s cubic-bezier(.2,1.4,.4,1) forwards; animation-delay: calc(var(--i) * 55ms + 150ms); }
+  @keyframes pop { to { opacity: 1; transform: none; } }
+  .tile { width: var(--icon); height: var(--icon); border-radius: 22.5%; display: grid; place-items: center; position: relative; overflow: hidden;
+    box-shadow: 0 8px 18px rgba(20,10,30,.28), inset 0 1px 0 rgba(255,255,255,.35); transition: transform .25s cubic-bezier(.2,1.4,.4,1); }
+  .tile::after { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(255,255,255,.28), rgba(255,255,255,0) 50%); }
+  .tile svg { width: 54%; height: 54%; stroke: #fff; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; position: relative; z-index: 1; }
+  .app-icon .label { font-size: 12.5px; font-weight: 500; text-align: center; line-height: 1.2; text-shadow: 0 1px 3px rgba(0,0,0,.45); white-space: nowrap; }
+  .app-icon:hover .tile { transform: translateY(-4px) scale(1.06); }
+  .app-icon:active .tile { transform: scale(.9); }
+  .app-icon:focus-visible { outline: none; }
+  .app-icon:focus-visible .tile { outline: 3px solid #fff; outline-offset: 3px; }
+  .badge { position: absolute; top: -6px; right: -6px; z-index: 2; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: #e5484d; color: #fff;
+    font-size: 12px; font-weight: 700; display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.3); }
+  .tile-wrap { position: relative; }
+
+  .dock { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 3; display: flex; gap: 22px; padding: 14px 20px;
+    border-radius: 32px; background: rgba(255,255,255,.2); backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5); border: 1px solid rgba(255,255,255,.25); }
+  .dock .app-icon .label { display: none; }
+  .dock { --icon: 64px; }
+
+  /* tile colours */
+  .c-life    { background: linear-gradient(145deg, #ff7a7a, #c8324a); }
+  .c-general { background: linear-gradient(145deg, #5fb4ff, #2459c9); }
+  .c-banking { background: linear-gradient(145deg, #52d69a, #13805a); }
+  .c-esg     { background: linear-gradient(145deg, #a6e06b, #3f8f2a); }
+  .c-policy  { background: linear-gradient(145deg, #a48bff, #5534c4); }
+  .c-markets { background: linear-gradient(145deg, #ffc45c, #e0701f); }
+  .c-academia{ background: linear-gradient(145deg, #7a8cff, #2b318f); }
+  .c-library { background: linear-gradient(145deg, #f4efe6, #c9bfab); }
+  .c-library svg { stroke: #1a1614; }
+  .c-products{ background: linear-gradient(145deg, #5a5048, #1a1614); }
+  .c-projects{ background: linear-gradient(145deg, #ff8fc8, #b4307a); }
+  .c-about   { background: linear-gradient(145deg, #9aa4b5, #4b5566); }
+  .c-contact { background: linear-gradient(145deg, #ff9a3d, #d4520e); }
+
+  /* ───── APP WINDOW ───── */
+  .scrim { position: fixed; inset: 0; z-index: 20; background: rgba(15,10,25,.35); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); opacity: 0; pointer-events: none; transition: opacity .35s; }
+  .scrim.on { opacity: 1; pointer-events: auto; }
+  .window { position: fixed; z-index: 21; left: 50%; top: 50%; width: min(940px, calc(100vw - 48px)); height: min(86vh, 860px);
+    margin-left: calc(min(940px, calc(100vw - 48px)) / -2); margin-top: calc(min(86vh, 860px) / -2);
+    background: var(--paper); color: var(--ink); border-radius: 30px; overflow: hidden; display: none; flex-direction: column;
+    box-shadow: 0 30px 80px rgba(10,5,20,.45); transform-origin: center; font-family: var(--serif); }
+  .window.open { display: flex; }
+  .win-bar { display: flex; align-items: center; gap: 14px; padding: 18px 22px 14px; border-bottom: 1px solid var(--rule); flex: none; }
+  .win-bar .tile { --icon: 40px; width: 40px; height: 40px; border-radius: 10px; box-shadow: none; }
+  .win-bar h1 { font-size: 28px; font-weight: 500; letter-spacing: -.01em; flex: 1; line-height: 1.1; }
+  .win-bar h1 small { display: block; font-family: var(--ui); font-size: 12px; color: var(--ink-mute); font-weight: 500; letter-spacing: .02em; margin-top: 3px; }
+  .done { font-family: var(--ui); font-size: 15px; font-weight: 600; color: #fff; background: var(--ink); padding: 8px 16px; border-radius: 999px; }
+  .done:hover { background: #3a322c; }
+  .win-body { flex: 1; overflow-y: auto; padding: 8px 28px 48px; overscroll-behavior: contain; }
+  .home-ind { position: absolute; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: rgba(26,22,20,.35); cursor: pointer; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0 6px; position: sticky; top: -8px; background: var(--paper); z-index: 2; }
+  .chip { font-family: var(--ui); font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-soft); transition: all .2s; }
+  .chip:hover { border-color: var(--ink-soft); }
+  .chip.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+  /* publications */
+  .pub-list { list-style: none; counter-reset: pub; }
+  .pub { display: grid; grid-template-columns: 44px 1fr auto; gap: 18px; padding: 20px 0; border-bottom: 1px solid var(--rule); counter-increment: pub;
+    animation: rise .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--n, 0) * 40ms); }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+  .pub-num::before { content: counter(pub, decimal-leading-zero) "."; font-size: 15px; color: var(--ink-mute); }
+  .pub-cat { font-family: var(--ui); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-mute); font-weight: 600; margin-bottom: 6px; }
+  .pub-title { font-size: 22px; font-weight: 500; line-height: 1.25; margin-bottom: 6px; }
+  .pub-title a { text-decoration: none; background-image: linear-gradient(var(--ink), var(--ink)); background-size: 0 1px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size .3s; }
+  .pub-title a:hover { background-size: 100% 1px; }
+  .pub-title a::after { content: ' ↗'; font-size: .75em; color: var(--ink-mute); }
+  .pub-desc { font-size: 17px; color: var(--ink-soft); line-height: 1.5; }
+  .pub-year { font-size: 15px; color: var(--ink-mute); }
+  .pub-status, .product-status { display: inline-block; margin-left: 8px; font-family: var(--ui); font-size: 10.5px; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-mute); font-weight: 600;
+    border: 1px solid var(--rule); border-radius: 999px; padding: 2px 8px; vertical-align: middle; }
+  .empty { padding: 40px 0; color: var(--ink-mute); font-size: 18px; }
+
+  /* products and projects */
+  .products-subcategory { margin-top: 22px; }
+  .products-subcategory h3 { font-size: 22px; font-weight: 500; margin-bottom: 12px; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .product-card { background: #fff8ee; border: 1px solid var(--rule); border-radius: 18px; padding: 18px; animation: rise .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--n, 0) * 35ms);
+    transition: transform .25s, box-shadow .25s; }
+  .product-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(26,22,20,.1); }
+  .product-category { font-family: var(--ui); font-size: 10.5px; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-mute); font-weight: 600; }
+  .product-name { font-size: 21px; font-weight: 500; margin: 6px 0; }
+  .product-summary { font-size: 16px; color: var(--ink-soft); line-height: 1.45; }
+  .product-status { margin: 8px 0 0; }
+  .product-link { display: inline-block; margin-top: 10px; font-family: var(--ui); font-size: 12px; color: var(--ink-mute); }
+
+  /* about */
+  .about-text { max-width: 680px; padding-top: 18px; font-size: 19px; line-height: 1.6; color: var(--ink-soft); }
+  .about-text p { margin-bottom: 16px; }
+  .role-list { list-style: none; margin: 8px 0 22px; }
+  .role-list li { padding: 12px 0; border-top: 1px solid var(--rule); font-size: 17px; }
+  .role-list li:last-child { border-bottom: 1px solid var(--rule); }
+  .role-list strong { color: var(--ink); font-weight: 600; }
+  .about-cta { margin-top: 6px; }
+  .about-cta button { font-family: var(--ui); font-size: 14px; font-weight: 600; color: #fff; background: #d4520e; padding: 10px 18px; border-radius: 999px; }
+
+  /* contact game */
+  .court-wrap { position: relative; margin-top: 16px; border-radius: 22px; overflow: hidden; background: linear-gradient(180deg, #2b2346 0%, #4d3358 60%, #b5643f 100%); }
+  #court { display: block; width: 100%; height: clamp(300px, 52vh, 440px); touch-action: none; cursor: grab; }
+  #court.dragging { cursor: grabbing; }
+  .court-hud { position: absolute; top: 14px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: center; font-family: var(--ui); color: #fff; font-size: 13px; font-weight: 600; pointer-events: none; }
+  .court-hud .score { font-family: var(--serif); font-size: 22px; }
+  .court-hint { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; font-family: var(--ui); color: rgba(255,255,255,.85); font-size: 14px; pointer-events: none; animation: hint 2.2s ease-in-out infinite; }
+  @keyframes hint { 50% { opacity: .35; } }
+  .swish { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%) scale(.5); font-family: var(--serif); font-size: 56px; font-weight: 600; color: #ffd27a; opacity: 0; pointer-events: none; text-shadow: 0 4px 20px rgba(0,0,0,.4); }
+  .swish.go { animation: swish 1.1s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes swish { 30% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -80%) scale(1); } }
+  .game-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; font-family: var(--ui); }
+  .game-actions button { font-size: 14px; font-weight: 600; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-soft); }
+  .game-actions button.primary { background: #d4520e; border-color: #d4520e; color: #fff; }
+  .contacts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 22px; }
+  .contacts[hidden] { display: none; }
+  .contact-card { display: block; text-decoration: none; padding: 18px; border-radius: 18px; background: #fff8ee; border: 1px solid var(--rule); animation: rise .6s cubic-bezier(.2,1.3,.4,1) both; animation-delay: calc(var(--n) * 110ms); transition: transform .2s; }
+  .contact-card:hover { transform: translateY(-3px); }
+  .contact-card span { display: block; font-family: var(--ui); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-mute); font-weight: 600; }
+  .contact-card b { font-size: 20px; font-weight: 500; word-break: break-all; }
+  .contact-lede { font-size: 18px; color: var(--ink-soft); padding-top: 16px; }
+
+  /* source content, never shown directly */
+  #source { display: none; }
+
+  /* ───── SMALL SCREENS ───── */
+  @media (max-width: 860px) {
+    body { overflow: auto; }
+    .home { padding: 56px 16px 120px; height: auto; min-height: 100%; }
+    .home-grid { grid-template-columns: 1fr; gap: 26px; padding-top: 8px; }
+    .widgets { grid-template-columns: 1fr; }
+    .widget.w-clock, .widget.w-stats { display: none; }
+    .icons { --icon: 62px; grid-template-columns: repeat(4, var(--icon)); row-gap: 24px; }
+    .app-icon .label { font-size: 11px; }
+    .dock { --icon: 56px; gap: 16px; padding: 12px 16px; border-radius: 28px; }
+    .status .right a.hide-sm { display: none; }
+    .window { width: 100vw; height: 100%; margin: 0; left: 0; top: 0; border-radius: 0; }
+    .win-body { padding: 4px 16px 60px; }
+    .pub { grid-template-columns: 1fr; gap: 4px; }
+    .pub-num { display: none; }
+    .pub-year { order: -1; font-size: 13px; }
+    .pub-title { font-size: 20px; }
+  }
+  @media (max-height: 700px) and (min-width: 861px) {
+    .home-grid { padding-top: 0; }
+    .widget.w-stats { display: none; }
+    .icons { row-gap: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+</style>
+<noscript><style>body{overflow:auto;background:var(--paper);color:var(--ink);font-family:var(--serif)} .wallpaper,.home,.dock,.status{display:none} #source{display:block;padding:24px;max-width:900px;margin:auto}</style></noscript>
+</head>
+<body>
+
+<!-- ═══════════ WALLPAPER (original artwork: Rift Valley at dusk) ═══════════ -->
+<div class="wallpaper" aria-hidden="true">
+  <div class="stars" id="stars"></div>
+  <div class="layer" data-depth="6" style="top:0;height:100%"><div class="sun"></div></div>
+  <svg class="bird" viewBox="0 0 24 10"><path d="M1 6 Q6 0 12 6 Q18 0 23 6" stroke="#2a1e2e" stroke-width="1.6" fill="none"/></svg>
+  <svg class="bird b2" viewBox="0 0 24 10"><path d="M1 6 Q6 0 12 6 Q18 0 23 6" stroke="#2a1e2e" stroke-width="1.6" fill="none"/></svg>
+  <div class="hills layer" data-depth="10">
+    <svg viewBox="0 0 1440 500" preserveAspectRatio="none"><path fill="#a6566a" opacity=".55" d="M0 230 C160 150 300 120 460 175 C600 220 700 110 860 95 C1020 80 1150 170 1290 140 C1370 122 1410 110 1440 105 V500 H0Z"/></svg>
+  </div>
+  <div class="hills layer" data-depth="18">
+    <svg viewBox="0 0 1440 500" preserveAspectRatio="none"><path fill="#6b3552" d="M0 300 C200 240 340 280 520 250 C700 220 820 300 1000 270 C1160 245 1300 200 1440 230 V500 H0Z"/></svg>
+  </div>
+  <div class="hills layer" data-depth="28">
+    <svg viewBox="0 0 1440 500" preserveAspectRatio="none">
+      <path fill="#3a2240" d="M0 380 C220 330 420 370 640 345 C860 320 1040 380 1240 350 C1340 335 1400 330 1440 335 V500 H0Z"/>
+      <!-- acacia -->
+      <g fill="#3a2240" transform="translate(1080 252)">
+        <rect x="46" y="20" width="6" height="80"/>
+        <path d="M49 40 L20 18 M49 44 L82 16" stroke="#3a2240" stroke-width="5"/>
+        <ellipse cx="50" cy="14" rx="70" ry="13"/>
+        <ellipse cx="22" cy="10" rx="34" ry="9"/>
+        <ellipse cx="84" cy="9" rx="30" ry="8"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hills layer" data-depth="40">
+    <svg viewBox="0 0 1440 500" preserveAspectRatio="none"><path fill="#1f1427" d="M0 440 C260 410 520 450 760 430 C1000 410 1220 450 1440 425 V500 H0Z"/></svg>
+  </div>
+</div>
+
+<!-- ═══════════ STATUS BAR ═══════════ -->
+<div class="status">
+  <div class="brand">Ndegwa<span>.</span></div>
+  <div class="right">
+    <span id="statusTime"></span>
+    <a href="classic.html" class="hide-sm">List view</a>
+  </div>
+</div>
+
+<!-- ═══════════ HOME SCREEN ═══════════ -->
+<main class="home">
+  <div class="home-grid">
+    <div class="widgets">
+      <section class="widget hello">
+        <h2>Hi, I'm Ndegwa</h2>
+        <p class="big">I price the risks East Africa <span class="hl">hasn't priced yet.</span></p>
+        <p class="lately">Lately: <span class="rotator" id="rotator" aria-live="polite">annuities without a Kenyan annuitant table</span></p>
+        <p class="roles">Life pricing, Nairobi &nbsp;·&nbsp; Assistant Editor in Chief, The Actuary East Africa &nbsp;·&nbsp; MSc in Climate Change, UCT</p>
+        <div class="cta">
+          <button data-open="library">Read the work</button>
+          <button data-open="contact" class="ghost">Take a shot &#127936;</button>
+        </div>
+      </section>
+      <section class="widget w-clock">
+        <h2>Two cities</h2>
+        <div class="clocks">
+          <div class="clock"><svg viewBox="0 0 100 100" data-tz="Africa/Nairobi"></svg><div>Nairobi<small data-time="Africa/Nairobi"></small></div></div>
+          <div class="clock"><svg viewBox="0 0 100 100" data-tz="Africa/Johannesburg"></svg><div>Cape Town<small data-time="Africa/Johannesburg"></small></div></div>
+        </div>
+      </section>
+      <section class="widget w-stats">
+        <h2>In the archive</h2>
+        <div class="stats">
+          <button data-open="library"><b id="statPubs">0</b><span>Publications</span></button>
+          <button data-open="products"><b id="statProducts">0</b><span>Products</span></button>
+          <button data-open="projects"><b id="statProjects">0</b><span>Projects</span></button>
+        </div>
+      </section>
+    </div>
+
+    <nav class="icons" id="icons" aria-label="Sections"></nav>
+  </div>
+</main>
+
+<nav class="dock" id="dock" aria-label="Dock"></nav>
+
+<!-- ═══════════ APP WINDOW ═══════════ -->
+<div class="scrim" id="scrim"></div>
+<div class="window" id="win" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+  <div class="win-bar">
+    <div class="tile" id="winTile"></div>
+    <h1 id="winTitle"></h1>
+    <button class="done" id="winDone">Done</button>
+  </div>
+  <div class="win-body" id="winBody"></div>
+  <div class="home-ind" id="homeInd" title="Back to home"></div>
+</div>
+
+<!-- ═══════════ CONTENT SOURCE ═══════════ -->
+<div id="source">
+  <ol class="pub-list" id="src-pubs">
+
+
+    <li class="pub" data-category="life-individual">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Life Insurance · Individual</div>
+        <h3 class="pub-title"><a href="#">Indexed universal life: pricing assumptions in volatile markets</a></h3>
+        <p class="pub-desc">A pricing walkthrough and stress test of an IUL design under shifting equity and rate scenarios.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="life-retirement-pre">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Life Insurance · Retirement, Pre</div>
+        <h3 class="pub-title"><a href="#">Deferred annuities in East Africa: a product gap analysis</a></h3>
+        <p class="pub-desc">Comparing accumulation phase retirement products across South Africa, Kenya, and the United Kingdom, with notes on the gaps and why they persist.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="life-retirement-post">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Life Insurance · Retirement, Post</div>
+        <h3 class="pub-title"><a href="articles/Post _Retirement_Part_1_Annuities.pdf">Post-Retirement Part I: Annuities; The Haves and Have-Nots in the Annuities Space from an East Africa lens</a></h3>
+        <p class="pub-desc">Notes from inside the pricing model. What we have, what we are missing and what it would take to close the gap</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="life-group">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Life Insurance · Group</div>
+        <h3 class="pub-title"><a href="#">Group life experience rating for SMEs</a></h3>
+        <p class="pub-desc">A pricing approach for thin data schemes, covering credibility weighting and revamp ideas for the SME segment.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="general">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">General Insurance</div>
+        <h3 class="pub-title"><a href="#">Parametric crop insurance: market assessment for smallholders</a></h3>
+        <p class="pub-desc">A product feasibility study covering index design, basis risk, and distribution pathways.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="general">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">General Insurance</div>
+        <h3 class="pub-title"><a href="#">Motor telematics: lessons from the UK for emerging markets</a></h3>
+        <p class="pub-desc">What usage based insurance products got right, what did not translate, and where the local opportunity sits.</p>
+      </div>
+      <div class="pub-year">2025</div>
+    </li>
+
+    <li class="pub" data-category="general">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">General Insurance · Health</div>
+        <h3 class="pub-title"><span class="pub-pending">Momentum Health's 2026 revamp, read against East African health insurers</span><span class="pub-status">Draft</span></h3>
+        <p class="pub-desc">Income banded pricing, provider choice as the price lever and rewards wrapped around cover. What the South African redesign did and which parts would transfer to Kenyan and regional medical cover.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="general">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">General Insurance · Micro-insurance</div>
+        <h3 class="pub-title"><span class="pub-pending">SwapCover and BodaShield: embedded cover for electric boda bodas</span><span class="pub-status">Pitch</span></h3>
+        <p class="pub-desc">An embedded micro-insurance concept for East Africa's electric motorcycle taxi sector, built around battery swaps and the rider's working day.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="banking">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Banking and Investment</div>
+        <h3 class="pub-title"><a href="#">Bancassurance unit linked savings: revamp ideas</a></h3>
+        <p class="pub-desc">Where current unit linked products fail customers, with a redesigned charge structure and clearer outcomes.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="banking">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Banking and Investment</div>
+        <h3 class="pub-title"><a href="#">Sharia compliant investment products: a gap analysis</a></h3>
+        <p class="pub-desc">Mapping local takaful and Islamic finance offerings against unmet demand in the retail segment.</p>
+      </div>
+      <div class="pub-year">2025</div>
+    </li>
+
+       <li class="pub" data-category="esg">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">ESG</div>
+        <h3 class="pub-title"><a href="#">East Africa climate-adjusted life insurance pricing</a></h3>
+        <p class="pub-desc">Standard life insurance pricing assumes that future mortality and morbidity rates can be projected from historical trends. Climate change breaks that assumption. Heat stress, vector-borne disease expansion, air quality degradation, food and water insecurity; these introduce non-linear,geographically differentiated shocks that traditional actuarial tables don't capture.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="esg">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">ESG · MSc Research</div>
+        <h3 class="pub-title"><span class="pub-pending">Translating climate risk into pricing for East African financial markets</span><span class="pub-status">In progress</span></h3>
+        <p class="pub-desc">Adapting the ASSA climate mortality and morbidity framework to Kenya, Tanzania and Uganda, where drought, flood driven disease and food insecurity are primary pathways. A second strand links drought indices to default risk in land secured lending.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="policy">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Regulation and Policy · Pensions</div>
+        <h3 class="pub-title"><span class="pub-pending">Pension investment limits: Regulation 28 against Kenya, Uganda, Tanzania and Rwanda</span><span class="pub-status">First pass</span></h3>
+        <p class="pub-desc">A clause by clause comparison of what retirement funds may hold in each market, with South Africa's Regulation 28 as the benchmark and the gaps that follow from it.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="policy">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Regulation and Policy · Insurance</div>
+        <h3 class="pub-title"><span class="pub-pending">Insurance capital, solvency and reinsurance: SAM against four East African regimes</span><span class="pub-status">First pass</span></h3>
+        <p class="pub-desc">Uganda, Tanzania and Rwanda rewrote their capital rules between 2025 and 2026. This sets each regime, and Kenya's, against South Africa's SAM standards on capital, reserving and reinsurance retention.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="policy">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Regulation and Policy · ERM</div>
+        <h3 class="pub-title"><span class="pub-pending">ORSA, risk based capital and compound Kenyan stress scenarios</span><span class="pub-status">Working party notes</span></h3>
+        <p class="pub-desc">Discussion points for the TASK ERM Working Party: a lean ORSA for boards, tying capital buffers to risk appetite rather than IRA minimums, and testing drought and inflation together rather than one at a time.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="policy">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Regulation and Policy · Public Finance</div>
+        <h3 class="pub-title"><span class="pub-pending">Parliamentary Budget Offices: Kenya and South Africa compared</span><span class="pub-status">Draft</span></h3>
+        <p class="pub-desc">How the two offices were set up, who they serve and how much power each parliament has over the budget, with a worked example of following education spending through both.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="policy">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Regulation and Policy · Currency</div>
+        <h3 class="pub-title"><span class="pub-pending">Currency valuation and consumer protection: the shilling and the rand</span><span class="pub-status">Draft</span></h3>
+        <p class="pub-desc">How each currency is valued against the dollar, why it matters when inputs are priced in dollars and goods are sold locally, and what protection consumers in each country actually have.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="policy">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Regulation and Policy · Health Security</div>
+        <h3 class="pub-title"><span class="pub-pending">Should Kenya host an Ebola quarantine facility? An ERM cost benefit analysis</span><span class="pub-status">Version 6</span></h3>
+        <p class="pub-desc">Applies the SEIR Poisson framework to the 2026 Bundibugyo outbreak. Once ground truth on screening and importation was applied, the result moved from conditional hosting to declining the facility.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="markets">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Markets · Consumer Goods</div>
+        <h3 class="pub-title"><span class="pub-pending">Wheat product diversification: lessons from South Africa for East Africa</span><span class="pub-status">Draft</span></h3>
+        <p class="pub-desc">South Africa turned one commodity into dozens of products by price point, health claim and shelf life. What East African millers, bakers and retailers could adopt first.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="markets">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Markets · Payments and Transport</div>
+        <h3 class="pub-title"><span class="pub-pending">Transport cards and cross border top ups: South Africa to Kenya</span><span class="pub-status">Draft</span></h3>
+        <p class="pub-desc">MyCiTi, Gautrain and Rea Vaya run on stored value cards while matatus still run on cash and M-Pesa. Three business angles, including a Nairobi parent topping up a Cape Town student's fares.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="markets">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Markets · Education</div>
+        <h3 class="pub-title"><span class="pub-pending">The university gap between Kenya and South Africa</span><span class="pub-status">Draft</span></h3>
+        <p class="pub-desc">Entry, credit frameworks, assessment and teaching support at a Kenyan university set against UCT, and what it would take to close the gap.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="academia">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Academia</div>
+        <h3 class="pub-title"><a href="#">Notes on Loss Models (Klugman), Chapter 7</a></h3>
+        <p class="pub-desc">Working through frequency severity models with applied examples from short term insurance.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+    
+     <li class="pub" data-category="academia">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Academia</div>
+        <h3 class="pub-title"><a href="articles/Ebola_Studies_.pdf">An Epidemiological ERM Framework for Ebola: Dynamic Pricing and Solvency Modeling via SEIR-Poisson Jump Processes</a></h3>
+        <p class="pub-desc">This framework pairs density-adjusted epidemic differential equations with stochastic jump processes to dynamically price catastrophic Ebola risk, ensuring health system solvency amid localized shocks and international evacuations</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="academia">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Academia</div>
+        <h3 class="pub-title"><a href="article-template.html">Actuaries as business architects</a></h3>
+        <p class="pub-desc">The view from outside the Dark rooms and corner.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+    
+    <li class="pub" data-category="academia">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Academia</div>
+        <h3 class="pub-title"><a href="articles/ArdhiGuard_1.pdf">ArdhiGuard: An AI-Actuarial Framework for Predicting and Preventing Land Loss Through Loan Default in Kenya</a></h3>
+        <p class="pub-desc">An integrated framework combining machine learning with actuarial pricing to predict loan default risk and prevent land loss, with application to Kenya's land-secured lending market. Submitted to the TASK Annual Convention 2026.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+    <li class="pub" data-category="academia">
+      <div class="pub-num"></div>
+      <div class="pub-main">
+        <div class="pub-cat">Academia · Economics</div>
+        <h3 class="pub-title"><span class="pub-pending">Discussion dossier for the REFA UCT Pluralism Symposium</span><span class="pub-status">Symposium paper</span></h3>
+        <p class="pub-desc">Statistical benchmarks and pain point questions prepared for the Rethinking Economics for Africa symposium at the UCT School of Economics, 31 October to 1 November 2026.</p>
+      </div>
+      <div class="pub-year">2026</div>
+    </li>
+
+  
+  </ol>
+  <div id="src-products">
+<div class="products-subcategory">
+    <h3>Individual Life Insurance</h3>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-category">Individual · Retail</div>
+        <h4 class="product-name">Whole of Life</h4>
+        <p class="product-summary">Permanent life coverage with level premiums and lifelong protection, available in both KES and USD for East African markets.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Individual · Retail</div>
+        <h4 class="product-name">Level Term Assurance</h4>
+        <p class="product-summary">Fixed-term life protection with level premiums for 10 to 25 year terms, available in KES and USD with guaranteed payouts.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Individual · Retail</div>
+        <h4 class="product-name">Investure</h4>
+        <p class="product-summary">Investment-linked endowment-style savings product with protection benefits, available in KES and USD for medium to long-term wealth building.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Individual · Retail</div>
+        <h4 class="product-name">Endowment Product</h4>
+        <p class="product-summary">Savings-linked life cover combining protection with profit participation and maturity benefits, available in KES and USD versions.<span class="product-status">Priced, not yet launched</span></p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Individual · Retail</div>
+        <h4 class="product-name">Thabiti Life Plan</h4>
+        <p class="product-summary">Flexible protection and savings combination offering term life cover with optional savings components in KES and USD.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Individual · Retail</div>
+        <h4 class="product-name">Critical Illness Cover</h4>
+        <p class="product-summary">Lump-sum protection against major health events like cancer and stroke, available standalone or as a rider to life policies.<span class="product-status">Priced, not yet launched</span></p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Individual · Retail</div>
+        <h4 class="product-name">Funeral Expense Cover</h4>
+        <p class="product-summary">Affordable final expense protection designed for accessibility, ensuring dignity in passing across income segments.<span class="product-status">Priced, not yet launched</span></p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Retirement Products -->
+  <div class="products-subcategory">
+    <h3>Retirement Solutions</h3>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-category">Retirement · Income</div>
+        <h4 class="product-name">Annuity</h4>
+        <p class="product-summary">Guaranteed income for life from retirement savings, providing reliable pension payments with longevity risk protection.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Retirement · Decumulation</div>
+        <h4 class="product-name">Income Drawdown Fund</h4>
+        <p class="product-summary">Flexible retirement income solution allowing periodic withdrawals from invested lump sum with minimum 4% guaranteed return plus bonuses.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Group Life Products -->
+  <div class="products-subcategory">
+    <h3>Group Life Insurance</h3>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-category">Group · Loan Protection</div>
+        <h4 class="product-name">Group Mortgage Protection Policy</h4>
+        <p class="product-summary">Specialized loan protection for mortgages and high-value loans, covering death, disability, and job loss to protect lenders and borrowers.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Group · Loan Protection</div>
+        <h4 class="product-name">Group Credit Life</h4>
+        <p class="product-summary">Credit line protection for short-term loans covering death, disability, and unemployment, with optional critical illness and funeral benefits.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tools & Infrastructure -->
+  <div class="products-subcategory">
+    <h3>Operational Systems and Infrastructure</h3>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-category">Infrastructure · Customer Tool</div>
+        <h4 class="product-name">Automated PRS Calculator</h4>
+        <p class="product-summary">Interactive tool for Personal Retirement Scheme projections, enabling customers to model contributions, returns, and retirement income scenarios.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Infrastructure · Automation</div>
+        <h4 class="product-name">Reinsurance Automation Tool</h4>
+        <p class="product-summary">Internal systems and automation for streamlined reinsurance placement, underwriting, and settlement processes.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Infrastructure · Automation</div>
+        <h4 class="product-name">Valuation Data Automation Tool</h4>
+        <p class="product-summary">Automated data pipeline for actuarial valuations, enhancing accuracy, auditability, and timeliness of financial and actuarial reporting.</p>
+        <span class="product-link">Specification on request</span>
+      </div>
+
+    </div>
+  </div>
+  </div>
+  <div id="src-projects">
+<div class="products-subcategory">
+    <h3>Builds</h3>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-category">Health · Student Wellness</div>
+        <h4 class="product-name">MindBridge</h4>
+        <p class="product-summary">AI powered audio journaling for university students, piloted around UCT's Student Wellness waitlists. Live transcription, five support personas and a safety classifier that surfaces human help when distress signals appear.<span class="product-status">Working prototype</span></p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Fintech · Comparison</div>
+        <h4 class="product-name">East Africa Financial Product Platform</h4>
+        <p class="product-summary">A consumer comparison platform for Kenya, Uganda and Tanzania covering bank, insurance, mobile money and SACCO products, with USSD access planned for feature phones.<span class="product-status">Prototype</span></p>
+      </div>
+
+      <div class="product-card">
+        <div class="product-category">Investment · Quantitative</div>
+        <h4 class="product-name">JSE Quant Pipeline</h4>
+        <p class="product-summary">A Python pipeline for JSE equities with a momentum backtest, data unit error repair and significance testing, run alongside a R100,000 simulated portfolio for the UCT Group Investment Project.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="products-subcategory">
+    <h3>Consulting</h3>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-category">Regulatory · Actuarial</div>
+        <h4 class="product-name">East Africa Financial Services Consulting</h4>
+        <p class="product-summary">Regulatory and actuarial work across Kenya, Uganda, Tanzania and Rwanda. A living register of acts and prudential rules, with South Africa as the benchmark, and clause level comparisons that show where each market falls short.<span class="product-status">Building</span></p>
+      </div>
+
+    </div>
+  </div>
+  </div>
+  <div id="src-about">
+<div class="about-text">
+      <p>
+        I am Ndegwa, a student actuary with a focus on product development
+        and pricing across life insurance, general insurance and banking
+        and investment products. I grew up in the semi arid Rift Valley,
+        where drought is a baseline condition, and that is where my interest
+        in climate risk and pricing comes from.
+      </p>
+      <ul class="role-list">
+        <li><strong>Pricing and product development.</strong> Life insurance, Nairobi. Individual, retirement and group products, plus the tools behind them.</li>
+        <li><strong>Assistant Editor in Chief, The Actuary East Africa.</strong> The Actuarial Society of Kenya's magazine, read in about 20 countries.</li>
+        <li><strong>TASK Convention.</strong> Scientific and review committee, and member of the TASK ERM, Life and Reinsurance Working Party.</li>
+        <li><strong>University of Cape Town.</strong> Actuarial graduate studies, with the MSc in Climate Change.</li>
+        <li><strong>Milliman and ARC.</strong> ASP scholar.</li>
+      </ul>
+      <p>
+        Publications holds my research, gap analyses, pricing studies and
+        regulatory comparisons. Products shows the life insurance products I
+        have priced and developed. Projects covers what I am building outside
+        the day job.
+      </p>
+      <p>
+        If something here is useful, or you would like to discuss a product
+        idea, please reach out.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  /* ───── ICON GLYPHS ───── */
+  const G = {
+    life: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8.5 11h2l1-2 1.5 4 1-2h1.5"/>',
+    general: '<path d="M3 12a9 9 0 0 1 18 0z"/><path d="M12 12v6a2 2 0 0 1-4 0"/><path d="M12 3v0"/>',
+    banking: '<path d="M4 20h16"/><path d="M6 16V11M10 16V8M14 16v-5M18 16V5"/>',
+    esg: '<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l7-7"/>',
+    policy: '<path d="M12 4v16M7 20h10"/><path d="M5 8h14"/><path d="M5 8l-2.5 6h5zM19 8l-2.5 6h5z"/>',
+    markets: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 2.5 14.4 0 17M12 3.5c-2.5 2.6-2.5 14.4 0 17"/>',
+    academia: '<path d="M2.5 9 12 4.5 21.5 9 12 13.5z"/><path d="M6.5 11v4.5c3 2.2 8 2.2 11 0V11"/><path d="M21.5 9v5"/>',
+    library: '<path d="M5 4h4v16H5zM10 4h4v16h-4z"/><path d="M15.5 5.5l3.8-1 3.2 14.8-3.8 1z" transform="translate(-2 0)"/>',
+    products: '<path d="M12 3 20 7.5v9L12 21 4 16.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/>',
+    projects: '<path d="M12 3c3 2 4.5 5 4.5 9l-2 3h-5l-2-3c0-4 1.5-7 4.5-9z"/><circle cx="12" cy="9.5" r="1.6"/><path d="M9.5 15 7 19l3-1M14.5 15l2.5 4-3-1"/>',
+    about: '<circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-4 4-6 7.5-6s6.3 2 7.5 6"/>',
+    contact: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5v17"/><path d="M5.8 5.8c3 2.6 3 9.8 0 12.4M18.2 5.8c-3 2.6-3 9.8 0 12.4"/>'
+  };
+
+  /* ───── APPS ───── */
+  const cats = {
+    'life-individual': 'Individual', 'life-retirement-pre': 'Pre-retirement', 'life-retirement-post': 'Post-retirement', 'life-group': 'Group',
+    general: 'General Insurance', banking: 'Banking and Investment', esg: 'ESG', policy: 'Regulation and Policy', markets: 'Markets', academia: 'Academia'
+  };
+  const APPS = {
+    life:     { name: 'Life', title: 'Life Insurance', kind: 'pubs', match: c => c.startsWith('life-'),
+                chips: [['all','All life'],['life-individual','Individual'],['life-retirement-pre','Retirement: Pre'],['life-retirement-post','Retirement: Post'],['life-group','Group']] },
+    general:  { name: 'General', title: 'General Insurance', kind: 'pubs', match: c => c === 'general' },
+    banking:  { name: 'Banking', title: 'Banking and Investment', kind: 'pubs', match: c => c === 'banking' },
+    esg:      { name: 'ESG', title: 'ESG and Climate', kind: 'pubs', match: c => c === 'esg' },
+    policy:   { name: 'Policy', title: 'Regulation and Policy', kind: 'pubs', match: c => c === 'policy' },
+    markets:  { name: 'Markets', title: 'Markets', kind: 'pubs', match: c => c === 'markets' },
+    academia: { name: 'Academia', title: 'Academia', kind: 'pubs', match: c => c === 'academia' },
+    library:  { name: 'Library', title: 'All Publications', kind: 'pubs', match: () => true,
+                chips: [['all','All'],['life','Life'],['general','General'],['banking','Banking'],['esg','ESG'],['policy','Policy'],['markets','Markets'],['academia','Academia']] },
+    products: { name: 'Products', title: 'Products', sub: 'Life insurance products priced and developed', kind: 'copy', src: '#src-products' },
+    projects: { name: 'Projects', title: 'Projects', sub: 'Builds and ventures', kind: 'copy', src: '#src-projects' },
+    about:    { name: 'About', title: 'About', sub: 'A few notes about the practice', kind: 'about' },
+    contact:  { name: 'Contact', title: 'Contact', sub: 'Sink a shot to get my details', kind: 'contact' }
+  };
+  const HOME = ['life','general','banking','esg','policy','markets','academia','library'];
+  const DOCK = ['about','products','projects','contact'];
+
+  const pubs = $$('#src-pubs > li.pub');
+  const countFor = id => APPS[id].kind === 'pubs' ? pubs.filter(p => APPS[id].match(p.dataset.category)).length : 0;
+
+  function iconHTML(id, i) {
+    const n = HOME.includes(id) && id !== 'library' ? countFor(id) : 0;
+    return `<button class="app-icon" data-open="${id}" style="--i:${i}" aria-label="${APPS[id].title}">
+      <span class="tile-wrap"><span class="tile c-${id}"><svg viewBox="0 0 24 24">${G[id]}</svg></span>${n ? `<span class="badge">${n}</span>` : ''}</span>
+      <span class="label">${APPS[id].name}</span></button>`;
+  }
+  $('#icons').innerHTML = HOME.map(iconHTML).join('');
+  $('#dock').innerHTML = DOCK.map((id, i) => iconHTML(id, i + HOME.length)).join('');
+
+  $('#statPubs').textContent = pubs.length;
+  $('#statProducts').textContent = $$('#src-products .product-card').length;
+  $('#statProjects').textContent = $$('#src-projects .product-card').length;
+
+  /* ───── WINDOW ───── */
+  const win = $('#win'), scrim = $('#scrim'), body = $('#winBody');
+  let current = null, originEl = null, cleanup = null;
+
+  function renderPubs(app, filter = 'all') {
+    const list = pubs.filter(p => app.match(p.dataset.category)).filter(p => {
+      if (filter === 'all') return true;
+      if (filter === 'life') return p.dataset.category.startsWith('life-');
+      return p.dataset.category === filter;
+    });
+    const ol = document.createElement('ol');
+    ol.className = 'pub-list';
+    list.forEach((p, i) => {
+      const li = p.cloneNode(true);
+      li.style.setProperty('--n', i);
+      // placeholder links would route home; turn them into plain titles
+      li.querySelectorAll('a[href="#"]').forEach(a => { const s = document.createElement('span'); s.innerHTML = a.innerHTML; a.replaceWith(s); });
+      li.querySelectorAll('a[href]').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
+      ol.appendChild(li);
+    });
+    return list.length ? ol : Object.assign(document.createElement('p'), { className: 'empty', textContent: 'Nothing here yet.' });
+  }
+
+  function fill(id) {
+    const app = APPS[id];
+    body.innerHTML = '';
+    body.scrollTop = 0;
+    if (app.kind === 'pubs') {
+      let listEl;
+      if (app.chips) {
+        const bar = document.createElement('div'); bar.className = 'chips';
+        bar.innerHTML = app.chips.map(([k, l], i) => `<button class="chip${i ? '' : ' active'}" data-f="${k}">${l}</button>`).join('');
+        bar.addEventListener('click', e => {
+          const b = e.target.closest('.chip'); if (!b) return;
+          $$('.chip', bar).forEach(c => c.classList.toggle('active', c === b));
+          const next = renderPubs(app, b.dataset.f); listEl.replaceWith(next); listEl = next;
+        });
+        body.appendChild(bar);
+      }
+      listEl = renderPubs(app); body.appendChild(listEl);
+    } else if (app.kind === 'copy') {
+      const c = $(app.src).cloneNode(true); c.removeAttribute('id');
+      $$('.product-card', c).forEach((el, i) => el.style.setProperty('--n', i));
+      body.appendChild(c);
+    } else if (app.kind === 'about') {
+      const c = $('#src-about').cloneNode(true); c.removeAttribute('id');
+      body.appendChild(c);
+      const cta = document.createElement('div'); cta.className = 'about-cta';
+      cta.innerHTML = '<button data-open="contact">Get in touch</button>';
+      c.querySelector('.about-text').appendChild(cta);
+    } else if (app.kind === 'contact') {
+      cleanup = buildGame(body);
+    }
+    const n = app.kind === 'pubs' ? pubs.filter(p => app.match(p.dataset.category)).length : 0;
+    $('#winTitle').innerHTML = `${app.title}<small>${app.sub || (n + (n === 1 ? ' entry' : ' entries'))}</small>`;
+    $('#winTile').className = `tile c-${id}`;
+    $('#winTile').innerHTML = `<svg viewBox="0 0 24 24">${G[id]}</svg>`;
+  }
+
+  function flyFrom(el) {
+    if (!el) return 'scale(.85)';
+    const a = el.getBoundingClientRect(), b = win.getBoundingClientRect();
+    const dx = (a.left + a.width / 2) - (b.left + b.width / 2);
+    const dy = (a.top + a.height / 2) - (b.top + b.height / 2);
+    const s = Math.max(a.width / b.width, .06);
+    return `translate(${dx}px, ${dy}px) scale(${s})`;
+  }
+
+  function openApp(id, push = true) {
+    if (!APPS[id]) return;
+    if (cleanup) { cleanup(); cleanup = null; }
+    win.getAnimations().forEach(an => an.cancel());
+    const already = win.classList.contains('open') && scrim.classList.contains('on');
+    current = id;
+    originEl = $(`.icons [data-open="${id}"] .tile, .dock [data-open="${id}"] .tile`);
+    fill(id);
+    if (push && location.hash !== '#/' + id) history.pushState(null, '', '#/' + id);
+    if (already) return;
+    win.classList.add('open'); scrim.classList.add('on');
+    if (!reduce) win.animate([{ transform: flyFrom(originEl), opacity: .2, borderRadius: '60px' }, { transform: 'none', opacity: 1, borderRadius: '30px' }],
+      { duration: 480, easing: 'cubic-bezier(.2,.9,.25,1)' });
+    $('#winDone').focus({ preventScroll: true });
+  }
+
+  function closeApp(push = true) {
+    if (!win.classList.contains('open')) return;
+    if (cleanup) { cleanup(); cleanup = null; }
+    scrim.classList.remove('on');
+    const done = () => { if (current) return; win.classList.remove('open'); body.innerHTML = ''; };
+    if (reduce) done();
+    else win.animate([{ transform: 'none', opacity: 1 }, { transform: flyFrom(originEl), opacity: 0, borderRadius: '60px' }],
+      { duration: 360, easing: 'cubic-bezier(.4,0,.6,1)' }).onfinish = done;
+    if (originEl) originEl.closest('.app-icon').focus({ preventScroll: true });
+    current = null;
+    if (push && location.hash) history.pushState(null, '', location.pathname);
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-open]');
+    if (t) { e.preventDefault(); openApp(t.dataset.open); }
+  });
+  $('#winDone').addEventListener('click', () => closeApp());
+  $('#homeInd').addEventListener('click', () => closeApp());
+  scrim.addEventListener('click', () => closeApp());
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeApp(); });
+  const route = () => { const id = location.hash.replace('#/', ''); APPS[id] ? openApp(id, false) : closeApp(false); };
+  addEventListener('popstate', route);
+  if (location.hash.startsWith('#/')) route();
+
+  /* swipe down on the bar to close (touch) */
+  let sy = null;
+  $('.win-bar').addEventListener('touchstart', e => sy = e.touches[0].clientY, { passive: true });
+  $('.win-bar').addEventListener('touchend', e => { if (sy !== null && e.changedTouches[0].clientY - sy > 70) closeApp(); sy = null; });
+
+  /* ───── CLOCKS ───── */
+  function timeIn(tz) {
+    const p = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false }).formatToParts(new Date());
+    const g = t => +p.find(x => x.type === t).value;
+    return { h: g('hour') % 24, m: g('minute'), s: g('second') };
+  }
+  const pad = n => String(n).padStart(2, '0');
+  function drawClocks() {
+    $$('svg[data-tz]').forEach(svg => {
+      const { h, m, s } = timeIn(svg.dataset.tz);
+      const night = h < 6 || h >= 19;
+      const hand = (deg, len, w, col) => `<line x1="50" y1="50" x2="${50 + len * Math.sin(deg * Math.PI / 180)}" y2="${50 - len * Math.cos(deg * Math.PI / 180)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
+      let ticks = '';
+      for (let i = 0; i < 12; i++) { const a = i * 30 * Math.PI / 180; ticks += `<line x1="${50 + 38 * Math.sin(a)}" y1="${50 - 38 * Math.cos(a)}" x2="${50 + 42 * Math.sin(a)}" y2="${50 - 42 * Math.cos(a)}" stroke="${night ? '#fff' : '#1a1614'}" stroke-opacity=".5" stroke-width="2"/>`; }
+      svg.innerHTML = `<circle cx="50" cy="50" r="48" fill="${night ? '#1a1614' : '#f4efe6'}"/>${ticks}` +
+        hand((h % 12 + m / 60) * 30, 24, 4.5, night ? '#fff' : '#1a1614') + hand((m + s / 60) * 6, 34, 3, night ? '#fff' : '#1a1614') +
+        hand(s * 6, 37, 1.4, '#e5484d') + `<circle cx="50" cy="50" r="3" fill="#e5484d"/>`;
+    });
+    $$('[data-time]').forEach(el => { const t = timeIn(el.dataset.time); el.textContent = `${pad(t.h)}:${pad(t.m)}`; });
+    const n = timeIn('Africa/Nairobi');
+    $('#statusTime').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + '  ' + pad(n.h) + ':' + pad(n.m);
+  }
+  drawClocks(); setInterval(drawClocks, 1000);
+
+  /* ───── ROTATING "LATELY" LINE ───── */
+  const lately = [
+    'annuities without a Kenyan annuitant table',
+    'climate risk inside life insurance pricing',
+    'drought, land and loan defaults',
+    'Ebola, quarantine and solvency',
+    'boda bodas going electric',
+    'four East African regulators against one benchmark',
+    'what South Africa does with wheat'
+  ];
+  const rot = $('#rotator');
+  if (!reduce) {
+    let k = 0;
+    setInterval(() => {
+      rot.classList.add('out');
+      setTimeout(() => { k = (k + 1) % lately.length; rot.textContent = lately[k]; rot.classList.remove('out'); }, 350);
+    }, 2800);
+  }
+
+  /* ───── STARS AND PARALLAX ───── */
+  const stars = $('#stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('i');
+    s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = (-Math.random() * 4) + 's'; s.style.opacity = (.3 + Math.random() * .6).toFixed(2);
+    stars.appendChild(s);
+  }
+  if (!reduce && matchMedia('(pointer: fine)').matches) {
+    const layers = $$('.wallpaper .layer');
+    addEventListener('pointermove', e => {
+      const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
+      layers.forEach(l => { const d = +l.dataset.depth; l.style.transform = `translate(${-x * d}px, ${-y * d * .5}px)` + (l.classList.contains('sun') ? ' translate(-50%,-50%)' : ''); });
+    });
+  }
+
+  /* ───── BASKETBALL CONTACT GAME ───── */
+  function buildGame(root) {
+    root.innerHTML = `
+      <p class="contact-lede">Swipe toward the hoop and let go. The longer the swipe, the harder the throw. Score once and my details drop in.</p>
+      <div class="court-wrap">
+        <canvas id="court" aria-label="Basketball mini game. Swipe toward the hoop and release to shoot."></canvas>
+        <div class="court-hud"><span class="score" id="score">0 / 0</span><span id="streak"></span></div>
+        <div class="court-hint" id="hint">Swipe toward the hoop</div>
+        <div class="swish" id="swish">Swish!</div>
+      </div>
+      <div class="game-actions">
+        <button class="primary" id="autoShot">Shoot for me</button>
+        <button id="skip">Skip to contacts</button>
+      </div>
+      <div class="contacts" id="contacts" hidden>
+        <a class="contact-card" style="--n:0" href="mailto:bullsfamily6@gmail.com"><span>Email</span><b>bullsfamily6@gmail.com</b></a>
+        <a class="contact-card" style="--n:1" href="https://github.com/vndegwa" target="_blank" rel="noopener"><span>GitHub</span><b>github.com/vndegwa</b></a>
+        <a class="contact-card" style="--n:2" href="classic.html"><span>Everything on one page</span><b>List view</b></a>
+      </div>`;
+
+    const cv = $('#court', root), ctx = cv.getContext('2d');
+    let W, H, dpr, R, g, rimY, rimL, rimR, boardX, boardTop, start;
+    let ball, drag = null, made = 0, shots = 0, netPulse = 0, raf, last = performance.now(), restTimer = 0, revealed = false;
+
+    function size() {
+      dpr = Math.min(devicePixelRatio || 1, 2);
+      W = cv.clientWidth; H = cv.clientHeight; if (!W || !H) return;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      R = Math.max(12, Math.min(W, H) * 0.045); g = H * 3.2;
+      rimY = H * 0.40; rimR = W * 0.86; rimL = rimR - R * 3.3; boardX = rimR + 6; boardTop = rimY - H * 0.24;
+      start = { x: W * 0.16, y: H * 0.78 };
+      reset();
+    }
+    function reset() { ball = { x: start.x, y: start.y, vx: 0, vy: 0, rot: 0, rest: true, scored: false }; restTimer = 0; }
+
+    function shoot(vx, vy) { ball.vx = vx; ball.vy = vy; ball.rest = false; shots++; hud(); $('#hint', root).style.display = 'none'; }
+    function autoShot() {
+      if (!ball) size();
+      if (!ball.rest) return;
+      const tx = (rimL + rimR) / 2 + R * .3, ty = rimY - R * .4, T = 1.4 + Math.random() * 0.06;
+      shoot((tx - ball.x) / T, (ty - ball.y - 0.5 * g * T * T) / T);
+    }
+    // swipe direction is the throw direction; shots that are close get a gentle nudge toward the hoop
+    function aimVel() {
+      let vx = (drag.x - drag.sx) * 7, vy = (drag.y - drag.sy) * 7;
+      const tx = (rimL + rimR) / 2 + R * .3, ty = rimY - R * .4;
+      if (vx > 40) {
+        const T = (tx - ball.x) / vx;
+        if (T > .45 && T < 2.2) {
+          const vyI = (ty - ball.y - .5 * g * T * T) / T, err = Math.abs(vy - vyI) / Math.abs(vyI);
+          if (err < .8) vy += (vyI - vy) * .85;
+        }
+      }
+      return { vx, vy };
+    }
+    function hud() { $('#score', root).textContent = `${made} / ${shots}`; }
+    function reveal() {
+      if (revealed) return; revealed = true;
+      const c = $('#contacts', root); c.hidden = false;
+      setTimeout(() => c.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' }), 250);
+    }
+
+    function bounceOff(px, py, pr) {
+      const dx = ball.x - px, dy = ball.y - py, d = Math.hypot(dx, dy);
+      if (d < R + pr && d > 0) {
+        const nx = dx / d, ny = dy / d, dot = ball.vx * nx + ball.vy * ny;
+        if (dot < 0) { ball.vx -= 1.6 * dot * nx; ball.vy -= 1.6 * dot * ny; }
+        ball.x = px + nx * (R + pr); ball.y = py + ny * (R + pr);
+      }
+    }
+
+    function step(dt) {
+      if (ball.rest) return;
+      const py = ball.y;
+      ball.vy += g * dt; ball.x += ball.vx * dt; ball.y += ball.vy * dt; ball.rot += ball.vx * dt / R;
+      bounceOff(rimL, rimY, 3); bounceOff(rimR, rimY, 3);
+      if (ball.x + R > boardX && ball.x < boardX + 10 && ball.y > boardTop && ball.y < rimY + R * 1.2) { ball.x = boardX - R; ball.vx = -Math.abs(ball.vx) * .55; }
+      if (!ball.scored && py < rimY && ball.y >= rimY && ball.x > rimL + 2 && ball.x < rimR - 2 && ball.vy > 0) {
+        ball.scored = true; made++; hud(); netPulse = 1;
+        const sw = $('#swish', root); sw.textContent = ['Swish!', 'Bucket!', 'Nothing but net', 'Count it!'][made % 4]; sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go');
+        $('#streak', root).textContent = made > 1 ? `${made} made` : '';
+        reveal();
+      }
+      if (py > rimY && ball.y <= rimY && ball.x > rimL && ball.x < rimR && ball.vy < 0) { ball.y = rimY + 1; ball.vy = Math.abs(ball.vy) * .3; }
+      if (ball.y + R > H) { ball.y = H - R; ball.vy *= -.55; ball.vx *= .8; if (Math.abs(ball.vy) < 60) ball.vy = 0; }
+      const still = Math.abs(ball.vx) < 15 && ball.vy === 0;
+      if (still || ball.x < -R * 4 || ball.x > W + R * 4) restTimer += dt;
+      if (restTimer > .5) { reset(); if (shots >= 3 && !revealed) $('#skip', root).classList.add('primary'); }
+    }
+
+    function drawBall(x, y, rot) {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+      const grd = ctx.createRadialGradient(-R * .35, -R * .35, R * .1, 0, 0, R);
+      grd.addColorStop(0, '#ffad5c'); grd.addColorStop(1, '#d4520e');
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#3a1a08'; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(-R, 0); ctx.lineTo(R, 0); ctx.moveTo(0, -R); ctx.lineTo(0, R); ctx.stroke();
+      ctx.beginPath(); ctx.arc(-R * 1.25, 0, R * .9, -0.9, 0.9); ctx.stroke();
+      ctx.beginPath(); ctx.arc(R * 1.25, 0, R * .9, Math.PI - 0.9, Math.PI + 0.9); ctx.stroke();
+      ctx.restore();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      // floor line
+      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(0, H - 6, W, 6);
+      // pole and backboard
+      ctx.fillStyle = '#2a2030'; ctx.fillRect(boardX + 10, rimY - 10, 8, H - rimY + 10);
+      ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.fillRect(boardX, boardTop, 10, rimY - boardTop + R * 1.2);
+      ctx.strokeStyle = '#d4520e'; ctx.lineWidth = 2; ctx.strokeRect(boardX - 1, rimY - R * 2.2, 3, R * 1.6);
+      // trajectory preview
+      if (drag) {
+        const { vx, vy } = aimVel();
+        ctx.fillStyle = 'rgba(255,255,255,.75)';
+        for (let t = 0.06; t < 0.75; t += 0.06) {
+          const x = ball.x + vx * t, y = ball.y + vy * t + .5 * g * t * t;
+          ctx.globalAlpha = 1 - t / .8; ctx.beginPath(); ctx.arc(x, y, 2.6, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      // ball behind rim front
+      drawBall(ball.x, ball.y, ball.rot);
+      // net
+      netPulse = Math.max(0, netPulse - 0.04);
+      const nl = R * (2.2 + netPulse * 1.2);
+      ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 1.2;
+      for (let i = 0; i <= 5; i++) {
+        const x0 = rimL + (rimR - rimL) * i / 5, x1 = rimL + (rimR - rimL) * (.2 + .6 * i / 5);
+        ctx.beginPath(); ctx.moveTo(x0, rimY); ctx.lineTo(x1, rimY + nl); ctx.stroke();
+      }
+      for (let k = 1; k <= 3; k++) {
+        const yy = rimY + nl * k / 3.2, inset = (rimR - rimL) * .2 * k / 3;
+        ctx.beginPath(); ctx.moveTo(rimL + inset, yy); ctx.lineTo(rimR - inset, yy); ctx.stroke();
+      }
+      // rim
+      ctx.strokeStyle = '#ff6a1f'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(rimL, rimY); ctx.lineTo(boardX, rimY); ctx.stroke();
+      // pull band
+      if (drag) {
+        ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = 2; ctx.setLineDash([4, 5]);
+        ctx.beginPath(); ctx.moveTo(ball.x, ball.y); ctx.lineTo(ball.x + (drag.x - drag.sx) * .5, ball.y + (drag.y - drag.sy) * .5); ctx.stroke(); ctx.setLineDash([]);
+      }
+    }
+
+    function loop(now) {
+      const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+      step(dt); draw(); raf = requestAnimationFrame(loop);
+    }
+
+    const pos = e => { const r = cv.getBoundingClientRect(), k = cv.clientWidth / (r.width || 1); return { x: (e.clientX - r.left) * k, y: (e.clientY - r.top) * k }; };
+    cv.addEventListener('pointerdown', e => {
+      if (!ball) size();
+      if (!ball.rest) return;
+      const p = pos(e);
+      drag = { sx: p.x, sy: p.y, x: p.x, y: p.y }; cv.setPointerCapture(e.pointerId); cv.classList.add('dragging');
+    });
+    cv.addEventListener('pointermove', e => {
+      if (!drag) return;
+      const p = pos(e), max = Math.min(W, H) * .5;
+      let dx = p.x - drag.sx, dy = p.y - drag.sy; const d = Math.hypot(dx, dy);
+      if (d > max) { dx *= max / d; dy *= max / d; }
+      drag.x = drag.sx + dx; drag.y = drag.sy + dy;
+    });
+    const release = () => {
+      if (!drag) return;
+      const { vx, vy } = aimVel();
+      drag = null; cv.classList.remove('dragging');
+      if (Math.hypot(vx, vy) > 120) shoot(vx, vy);
+    };
+    cv.addEventListener('pointerup', release); cv.addEventListener('pointercancel', release);
+    $('#autoShot', root).addEventListener('click', autoShot);
+    $('#skip', root).addEventListener('click', reveal);
+    const onKey = e => { if (e.key === ' ' && current === 'contact') { e.preventDefault(); autoShot(); } };
+    addEventListener('keydown', onKey);
+    addEventListener('resize', size);
+
+    requestAnimationFrame(() => { size(); last = performance.now(); raf = requestAnimationFrame(loop); });
+    return () => { cancelAnimationFrame(raf); removeEventListener('keydown', onKey); removeEventListener('resize', size); };
+  }
+})();
+</script>
+</body>
+</html>
